@@ -16,6 +16,7 @@ const RecordAnswerSection = ({
   mockInterviewQuestion,
   activeQuestionIndex,
   interviewData,
+  isAudioPlaying
 }) => {
   const [userAnswer, setUserAnswer] = useState("");
   const { user } = useUser();
@@ -33,6 +34,7 @@ const RecordAnswerSection = ({
     continuous: true,
     useLegacyResults: false,
   });
+
   useEffect(() => {
     results.map((result) =>
       setUserAnswer((prevAns) => prevAns + result?.transcript)
@@ -48,11 +50,6 @@ const RecordAnswerSection = ({
   const StartStopRecording = async () => {
     if (isRecording) {
       stopSpeechToText();
-      // if (userAnswer?.length < 10) {
-      //   setLoading(false)
-      //   toast("Error while saving your answer,please record again");
-      //   return;
-      // }
     } else {
       startSpeechToText();
     }
@@ -109,6 +106,7 @@ const RecordAnswerSection = ({
   };
 
   if (error) return <p>Web Speech API is not available in this browser 🤷‍</p>;
+
   return (
     <div className="flex flex-col items-center justify-cente">
       <div className="flex flex-col items-center justify-center p-5 my-20 bg-black rounded-lg">
@@ -118,12 +116,11 @@ const RecordAnswerSection = ({
           mirrored={true}
           style={{ height: 300, width: 300 }}
         />
-        
       </div>
       <Button
-        disabled={loading}
+        disabled={loading || isAudioPlaying}  // Disable button when audio is playing
         variant="outline"
-        className="my-10"
+        className={`my-10 ${isAudioPlaying ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`} // Add greyed-out effect
         onClick={StartStopRecording}>
         {isRecording ? (
           <h2 className="flex items-center gap-2 text-red-600 animate-pulse">
@@ -135,9 +132,6 @@ const RecordAnswerSection = ({
           </h2>
         )}
       </Button>
-      {/* <Button onClick={() => console.log("------", userAnswer)}>
-        Show User Answer
-      </Button> */}
     </div>
   );
 };

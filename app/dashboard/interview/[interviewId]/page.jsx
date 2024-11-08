@@ -23,10 +23,10 @@ function Interview({ params }) {
   };
   return (
     <div className="my-10 ">
-      <h2 className="font-bold text-2xl">Lets get started</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="flex flex-col my-5 gap-5">
-          <div className="flex flex-col p-5  rounded-lg border gap-5">
+      <h2 className="text-2xl font-bold">Lets get started</h2>
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+        <div className="flex flex-col gap-5 my-5">
+          <div className="flex flex-col gap-5 p-5 border rounded-lg">
             <h2 className="text-lg">
               <strong>Job Role/Job Position: </strong>
               {interviewData?.jobPosition}
@@ -40,8 +40,8 @@ function Interview({ params }) {
               {interviewData?.jobExperience}
             </h2>
           </div>
-          <div className="p-5 border rounded-lg border-yellow-300 bg-yellow-100">
-            <h2 className="flex gap-2 items-center text-yellow-500">
+          <div className="p-5 bg-yellow-100 border border-yellow-300 rounded-lg">
+            <h2 className="flex items-center gap-2 text-yellow-500">
               <Lightbulb />
               <span>Information</span>
             </h2>
@@ -60,7 +60,7 @@ function Interview({ params }) {
             />
           ) : (
             <>
-              <WebcamIcon className="h-72 my-7 border rounded-lg w-full p-20 bg-secondary" />
+              <WebcamIcon className="w-full p-20 border rounded-lg h-72 my-7 bg-secondary" />
               <Button
                 className="w-full"
                 variant="ghost"
@@ -72,7 +72,7 @@ function Interview({ params }) {
           )}
         </div>
       </div>
-      <div className="flex justify-end items-end">
+      <div className="flex items-end justify-end">
         <Link href={`/dashboard/interview/${params.interviewId}/start`}>
           <Button>Start Interview</Button>
         </Link>
