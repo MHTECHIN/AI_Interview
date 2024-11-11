@@ -37,7 +37,9 @@ function AddNewInterview() {
   {
     "question": "Your question here",
     "answer": "Your answer here"
-  }`;
+  }
+  the response should be in valid json format. 
+  `;
 
     try {
       const result = await chatSession.sendMessage(inputPrompt);
@@ -81,15 +83,15 @@ function AddNewInterview() {
   return (
     <div>
       <div
-        className="p-10 border rounded-lg bg-secondary hover:scale-105 hover:shadow-md cursor-pointer transition-all"
+        className="p-10 transition-all border rounded-lg cursor-pointer bg-secondary hover:scale-105 hover:shadow-md"
         onClick={() => setOpenDialog(true)}
       >
-        <h1 className="font-bold text-lg text-center">+ Add New</h1>
+        <h1 className="text-lg font-bold text-center">+ Add New</h1>
       </div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="font-bold text-2xl">
+            <DialogTitle className="text-2xl font-bold">
               Tell us more about your job Interviewing
             </DialogTitle>
           </DialogHeader>
@@ -100,7 +102,7 @@ function AddNewInterview() {
                   Add details about your job position/role, job description, and
                   years of experience
                 </p>
-                <div className="mt-7 my-3">
+                <div className="my-3 mt-7">
                   <label>Job Role/Job Position</label>
                   <Input
                     placeholder="Ex. Full Stack Developer"
@@ -128,7 +130,7 @@ function AddNewInterview() {
                   />
                 </div>
               </div>
-              <div className="flex gap-5 justify-end">
+              <div className="flex justify-end gap-5">
                 <Button type="button" variant="ghost" onClick={() => setOpenDialog(false)}>
                   Cancel
                 </Button>
