@@ -47,13 +47,10 @@ const RecordAnswerSection = ({
   }, [userAnswer]);
 
   useEffect(() => {
-    // Play the appropriate video based on the audio state
-    if (isAudioPlaying) {
+    if (videoRef.current && isAudioPlaying) {
       videoRef.current.src = "/Speeking.mp4";
-    } else {
-      videoRef.current.src = "/Still.mp4";
+      videoRef.current.play();
     }
-    videoRef.current.play();
   }, [isAudioPlaying]);
 
   const StartStopRecording = async () => {
@@ -120,14 +117,24 @@ const RecordAnswerSection = ({
     <div className="flex flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center p-5 my-20 rounded-lg bg-stone-100">
         {/* Video playback element */}
-        <video
-          ref={videoRef}
-          src="/Still.mp4"
-          loop
-          muted
-          className=" w-72 h-72"
-          autoPlay
-        />
+        {isAudioPlaying ? (
+          // Render video when audio is playing
+          <video
+            ref={videoRef}
+            src="/Speaking.mp4"
+            loop
+            muted
+            className="w-72 h-72"
+            autoPlay
+          />
+        ) : (
+          // Render poster when audio is not playing
+          <img
+            src="/poster.jpg" // Replace with the path to your poster image
+            alt="Poster"
+            className="w-72 h-72"
+          />
+        )}
       </div>
       <Button
         disabled={loading || isAudioPlaying} // Disable button when audio is playing

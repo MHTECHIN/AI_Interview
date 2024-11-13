@@ -33,7 +33,7 @@ function AddNewInterview() {
     e.preventDefault();
     setLoading(true);
 
-    const inputPrompt = `Generate questions for HR Round. No.of Years of Experence: ${jobExperience} The question Count: ${process.envNEXT_PUBLIC_INTERVIEW_QUESTION_COUNT}
+    const inputPrompt = `Generate questions for HR Round. No.of Years of Experence: ${jobExperience} The question Count: ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT}
   {
     "question": "Your question here",
     "answer": "Your answer here"
