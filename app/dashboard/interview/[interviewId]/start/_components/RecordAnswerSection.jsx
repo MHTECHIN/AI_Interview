@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import Webcam from "react-webcam";
+import React, { useEffect, useRef, useState } from "react";
 import useSpeechToText from "react-hook-speech-to-text";
 import { Mic, StopCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -16,11 +14,12 @@ const RecordAnswerSection = ({
   mockInterviewQuestion,
   activeQuestionIndex,
   interviewData,
-  isAudioPlaying
+  isAudioPlaying,
 }) => {
   const [userAnswer, setUserAnswer] = useState("");
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const videoRef = useRef(null); // Reference to control the video playback
 
   const {
     error,
@@ -46,6 +45,16 @@ const RecordAnswerSection = ({
       UpdateUserAnswer();
     }
   }, [userAnswer]);
+
+  useEffect(() => {
+    // Play the appropriate video based on the audio state
+    if (isAudioPlaying) {
+      videoRef.current.src = "/Speeking.mp4";
+    } else {
+      videoRef.current.src = "/Still.mp4";
+    }
+    videoRef.current.play();
+  }, [isAudioPlaying]);
 
   const StartStopRecording = async () => {
     if (isRecording) {
@@ -108,19 +117,24 @@ const RecordAnswerSection = ({
   if (error) return <p>Web Speech API is not available in this browser 🤷‍</p>;
 
   return (
-    <div className="flex flex-col items-center justify-cente">
-      <div className="flex flex-col items-center justify-center p-5 my-20 bg-black rounded-lg">
-        <Webcam
-          onUserMedia={() => setWebCamEnabled(true)}
-          onUserMediaError={() => setWebCamEnabled(false)}
-          mirrored={true}
-          style={{ height: 300, width: 300 }}
+    <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center p-5 my-20 rounded-lg bg-stone-100">
+        {/* Video playback element */}
+        <video
+          ref={videoRef}
+          src="/Still.mp4"
+          loop
+          muted
+          className=" w-72 h-72"
+          autoPlay
         />
       </div>
       <Button
-        disabled={loading || isAudioPlaying}  // Disable button when audio is playing
+        disabled={loading || isAudioPlaying} // Disable button when audio is playing
         variant="outline"
-        className={`my-10 ${isAudioPlaying ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`} // Add greyed-out effect
+        className={`my-10 ${
+          isAudioPlaying ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""
+        }`} // Add greyed-out effect
         onClick={StartStopRecording}>
         {isRecording ? (
           <h2 className="flex items-center gap-2 text-red-600 animate-pulse">
