@@ -128,9 +128,9 @@ const RecordAnswerSection = ({
             autoPlay
           />
         ) : (
-          // Render poster when audio is not playing
+          
           <img
-            src="/poster.jpg" // Replace with the path to your poster image
+            src="/poster.jpg" 
             alt="Poster"
             className="w-72 h-72"
           />
