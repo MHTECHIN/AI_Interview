@@ -46,9 +46,10 @@ const RecordAnswerSection = ({
     }
   }, [userAnswer]);
 
+  // Update video source based on isAudioPlaying
   useEffect(() => {
-    if (videoRef.current && isAudioPlaying) {
-      videoRef.current.src = "/Speeking.mp4";
+    if (videoRef.current) {
+      videoRef.current.src = isAudioPlaying ? "/speaking.mp4" : "/still.mp4";
       videoRef.current.play();
     }
   }, [isAudioPlaying]);
@@ -115,26 +116,9 @@ const RecordAnswerSection = ({
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center p-5 my-20 rounded-lg bg-stone-100">
+      <div className="flex flex-col items-center justify-center p-5 my-20 bg-black rounded-lg">
         {/* Video playback element */}
-        {isAudioPlaying ? (
-          // Render video when audio is playing
-          <video
-            ref={videoRef}
-            src="/Speaking.mp4"
-            loop
-            muted
-            className="w-72 h-72"
-            autoPlay
-          />
-        ) : (
-          
-          <img
-            src="/poster.jpg" 
-            alt="Poster"
-            className="w-72 h-72"
-          />
-        )}
+        <video ref={videoRef} loop muted className="w-72 h-72" autoPlay />
       </div>
       <Button
         disabled={loading || isAudioPlaying} // Disable button when audio is playing
