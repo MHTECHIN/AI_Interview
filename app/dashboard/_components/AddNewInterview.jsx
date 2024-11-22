@@ -129,7 +129,7 @@ function AddNewInterview() {
                   <Input
                     placeholder="Ex. 5"
                     type="number"
-                    min="1"
+                    min="0"
                     max="70"
                     required
                     onChange={(e) => setJobExperience(e.target.value)}
