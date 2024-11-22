@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
   const [jobPosition, setJobPosition] = useState("");
-  const [jobDescription, setJobDescription] = useState("For any job description experenced or fresher");
+  const [jobDescription, setJobDescription] = useState("");
   const [jobExperience, setJobExperience] = useState("");
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
@@ -33,16 +33,16 @@ function AddNewInterview() {
     e.preventDefault();
     setLoading(true);
 
-    const inputPrompt = `Generate questions for HR Round. No.of Years of Experence: ${jobExperience} The question Count: ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT}
+    const inputPrompt = `Job position: ${"Any"}, Job Description: ${"Any"}, Years of Experience: ${jobExperience}, Depends on Job Position, Job Description and Years of Experience give us ${
+      process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT
+    } Interview question along with Answer in JSON format, Give us question and Answer field on JSON,Each question and answer should be in the format:
   {
     "question": "Your question here",
-    "answer": "Your answer here"
+    "answer": "Your Sample answer here"
   }
-  The first question the question should greet the user and ask them to introduce themselves.
-  The last question should be Thank you for attending do you have any questions.
-  The questions generated should in asked in HR Round Interview.
-  the response should be in valid json format. 
-  `;
+  the response shoudlbe a valid json string that should able to parsed by json.parse()
+  thers should be no special character included even the bracktes only characters, numbers and spaces and . , ? !
+  the questions should br hr round questions first question should be self intro and last question should be do you have nay questions`;
 
     try {
       const result = await chatSession.sendMessage(inputPrompt);
@@ -116,14 +116,14 @@ function AddNewInterview() {
                   years of experience
                 </p>
                 <div className="my-3 mt-7">
-                  <label>Intervie Name</label>
+                  <label>Interview Name</label>
                   <Input
-                    placeholder="Name the interview"
+                    placeholder="Ex. Name of the Interview"
                     required
                     onChange={(e) => setJobPosition(e.target.value)}
                   />
                 </div>
-
+              
                 <div className="my-3">
                   <label>Years of Experience</label>
                   <Input

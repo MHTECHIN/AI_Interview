@@ -49,8 +49,19 @@ const RecordAnswerSection = ({
   // Update video source based on isAudioPlaying
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.src = isAudioPlaying ? "/speaking.mp4" : "/still.mp4";
-      videoRef.current.play();
+      // Only change the video source if it has changed
+      const newSrc = isAudioPlaying ? "/speaking.mp4" : "/still.mp4";
+
+      // Check if the video source has changed before updating
+      if (videoRef.current.src !== newSrc) {
+        videoRef.current.src = newSrc;
+
+        // Ensure that the play() request is only called when the video is ready
+        videoRef.current.load(); // Reload the video to reset the state
+        videoRef.current.play().catch((error) => {
+          console.error("Error playing video:", error); // Log the error if play fails
+        });
+      }
     }
   }, [isAudioPlaying]);
 
