@@ -9,6 +9,7 @@ import { db } from "@/utils/db";
 import { UserAnswer } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import moment from "moment";
+import Webcam from "react-webcam";
 
 const RecordAnswerSection = ({
   mockInterviewQuestion,
@@ -19,6 +20,7 @@ const RecordAnswerSection = ({
   const [userAnswer, setUserAnswer] = useState("");
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const [webCamEnabled, setWebCamEnabled] = useState(false);
   const videoRef = useRef(null); // Reference to control the video playback
 
   const {
@@ -49,17 +51,13 @@ const RecordAnswerSection = ({
   // Update video source based on isAudioPlaying
   useEffect(() => {
     if (videoRef.current) {
-      // Only change the video source if it has changed
       const newSrc = isAudioPlaying ? "/speaking.mp4" : "/still.mp4";
 
-      // Check if the video source has changed before updating
       if (videoRef.current.src !== newSrc) {
         videoRef.current.src = newSrc;
-
-        // Ensure that the play() request is only called when the video is ready
-        videoRef.current.load(); // Reload the video to reset the state
+        videoRef.current.load();
         videoRef.current.play().catch((error) => {
-          console.error("Error playing video:", error); // Log the error if play fails
+          console.error("Error playing video:", error);
         });
       }
     }
@@ -84,24 +82,13 @@ const RecordAnswerSection = ({
       ",Depends on question and user answer for given interview question " +
       " please give use rating for answer and feedback as area of improvement if any" +
       " in just 3 to 5 lines to improve it in JSON format with rating field and feedback field";
-    console.log(
-      "🚀 ~ file: RecordAnswerSection.jsx:38 ~ SaveUserAnswer ~ feedbackPrompt:",
-      feedbackPrompt
-    );
+    console.log("Feedback Prompt:", feedbackPrompt);
     const result = await chatSession.sendMessage(feedbackPrompt);
-    console.log(
-      "🚀 ~ file: RecordAnswerSection.jsx:46 ~ SaveUserAnswer ~ result:",
-      result
-    );
     const mockJsonResp = result.response
       .text()
       .replace("```json", "")
       .replace("```", "");
 
-    console.log(
-      "🚀 ~ file: RecordAnswerSection.jsx:47 ~ SaveUserAnswer ~ mockJsonResp:",
-      mockJsonResp
-    );
     const JsonfeedbackResp = JSON.parse(mockJsonResp);
     const resp = await db.insert(UserAnswer).values({
       mockIdRef: interviewData?.mockId,
@@ -127,16 +114,29 @@ const RecordAnswerSection = ({
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center p-5 my-20 bg-black rounded-lg">
+      <div className="flex flex-col items-center justify-center gap-5 p-5 my-10 bg-black rounded-lg md:flex-row">
         {/* Video playback element */}
-        <video ref={videoRef} loop muted className="w-72 h-72" autoPlay />
+        <video
+          ref={videoRef}
+          loop
+          muted
+          className="border-2 border-gray-500 rounded-lg w-72 h-72"
+          autoPlay
+        />
+        {/* Webcam feed */}
+        <Webcam
+          onUserMedia={() => setWebCamEnabled(true)}
+          onUserMediaError={() => setWebCamEnabled(false)}
+          mirrored={true}
+          className="border-2 border-gray-500 rounded-lg w-72 h-72"
+        />
       </div>
       <Button
-        disabled={loading || isAudioPlaying} // Disable button when audio is playing
+        disabled={loading || isAudioPlaying}
         variant="outline"
         className={`my-10 ${
           isAudioPlaying ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""
-        }`} // Add greyed-out effect
+        }`}
         onClick={StartStopRecording}>
         {isRecording ? (
           <h2 className="flex items-center gap-2 text-red-600 animate-pulse">
